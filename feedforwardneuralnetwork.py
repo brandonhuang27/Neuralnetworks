@@ -39,7 +39,7 @@ class NeuralNet(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
         super(NeuralNet, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size) # creates a linear layer - input size is the input size, output size is the hidden size
-        self.relu = nn.ReLU() # initializes the rectified linear unit (relu) activation function
+        self.relu = nn.ReLU() # initializes the rectified linear unit (relu) activation function - max(0,x)
         self.fc2 = nn.Linear(hidden_size, num_classes) # creates another linear layer - input size is the hidden size, output size is the number of classes
     
     def forward(self, x): # takes in a sample x
