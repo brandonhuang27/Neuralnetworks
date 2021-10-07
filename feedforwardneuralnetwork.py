@@ -51,8 +51,8 @@ class NeuralNet(nn.Module):
 model = NeuralNet(input_size, hidden_size, num_classes).to(device)
 
 # Loss and optimizer
-criterion = nn.CrossEntropyLoss() # applies the cross-entropy loss function (which applies the softmax function) to calculate error
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  # applies the parameters and learning rate to create optimizer 
+criterion = nn.CrossEntropyLoss() # applies the cross-entropy loss function (which applies the softmax function) to calculate error - learns faster when loss is larger
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  # applies the parameters and learning rate to create optimizer (Adam Optimizer Formula)
 
 # Train the model
 total_step = len(train_loader) # the total number of steps to train the model is the length of the training loader
@@ -68,8 +68,8 @@ for epoch in range(num_epochs): # loop over the epochs
         
         # Backward and optimize
         optimizer.zero_grad() # empties the values in the gradients
-        loss.backward() # backpropagation
-        optimizer.step() # updates the parameters
+        loss.backward() # backpropagation - accumulates the gradient for each parameter
+        optimizer.step() # updates the parameters with a single optimization step based on the current gradient
         
         if (i+1) % 100 == 0: # every 100 iterations
             print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
