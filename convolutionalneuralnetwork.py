@@ -141,9 +141,9 @@ out.backward(torch.randn(1, 10)) # calculates the gradients from the loss/error
 output = net(input)
 target = torch.randn(10)  # a dummy target, for example
 target = target.view(1, -1)  # make it the same shape as output
-criterion = nn.MSELoss() # mean-squared error
+criterion = nn.MSELoss() # defines criterion as the mean-squared error loss function
 
-loss = criterion(output, target)
+loss = criterion(output, target) # uses MSELoss to calculate loss between output and target
 print(loss)
 
 ########################################################################
@@ -181,12 +181,12 @@ print(loss.grad_fn.next_functions[0][0].next_functions[0][0])  # ReLU
 # gradients before and after the backward.
 
 
-net.zero_grad()     # zeroes the gradient buffers of all parameters
+net.zero_grad() # zeroes the gradient buffers of all parameters
 
 print('conv1.bias.grad before backward')
 print(net.conv1.bias.grad)
 
-loss.backward()
+loss.backward() # backpropagation
 
 print('conv1.bias.grad after backward')
 print(net.conv1.bias.grad)
