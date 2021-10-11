@@ -41,27 +41,26 @@ class ConvNet(nn.Module):
         super(ConvNet, self).__init__()
         # 3 input image channel, 6 output channels, 5x5 square convolution
         self.conv1 = nn.Conv2d(3, 6, 5) # convolutional layer
-        self.pool = nn.MaxPool2d(2, 2) # max pooling layer
+        self.pool = nn.MaxPool2d(2, 2) # max pooling layer (over a 2x2 window)
         self.conv2 = nn.Conv2d(6, 16, 5) # convolutional layer
         self.fc1 = nn.Linear(16 * 5 * 5, 120) # fully connected layer - 5x5 from input dimension
         self.fc2 = nn.Linear(120, 84) # fully connected layer
         self.fc3 = nn.Linear(84, 10) # fully connected layer - 10 different classes
  
     def forward(self, x):
-        # -> n, 3, 32, 32
-        x = self.pool(F.relu(self.conv1(x)))  # -> n, 6, 14, 14
-        x = self.pool(F.relu(self.conv2(x)))  # -> n, 16, 5, 5
-        x = x.view(-1, 16 * 5 * 5)            # -> n, 400
-        x = F.relu(self.fc1(x))               # -> n, 120
-        x = F.relu(self.fc2(x))               # -> n, 84
-        x = self.fc3(x)                       # -> n, 10
+        x = self.pool(F.relu(self.conv1(x)))  # relu activiation function on first convolutional layer, then does pooling
+        x = self.pool(F.relu(self.conv2(x)))  # relu activiation function on second convolutional layer, then does max pooling
+        x = x.view(-1, 16 * 5 * 5)            
+        x = F.relu(self.fc1(x))               # relu activiation function on first fully connected layer
+        x = F.relu(self.fc2(x))               # relu activiation function on second fully connected layer
+        x = self.fc3(x)                       # feed input into the third fully connected layer
         return x
 
 
 model = ConvNet().to(device)
 
-criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+criterion = nn.CrossEntropyLoss() # defines criterion as the cross entropy loss function
+optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate) # implements stochastic gradient descent
 
 n_total_steps = len(train_loader)
 for epoch in range(num_epochs):
@@ -72,13 +71,13 @@ for epoch in range(num_epochs):
         labels = labels.to(device)
 
         # Forward pass
-        outputs = model(images)
-        loss = criterion(outputs, labels)
+        outputs = model(images) # feeds input image into the network
+        loss = criterion(outputs, labels) # calculates loss
 
         # Backward and optimize
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad() # zeroes the gradients
+        loss.backward() # backpropagation - calculates (and accumulates) the gradients
+        optimizer.step() # updates the weights
 
         if (i+1) % 2000 == 0:
             print (f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{n_total_steps}], Loss: {loss.item():.4f}')
