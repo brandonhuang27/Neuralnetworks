@@ -36,20 +36,6 @@ test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
 classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-def imshow(img):
-    img = img / 2 + 0.5  # unnormalize
-    npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.show()
-
-
-# get some random training images
-dataiter = iter(train_loader)
-images, labels = dataiter.next()
-
-# show images
-imshow(torchvision.utils.make_grid(images))
-
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
